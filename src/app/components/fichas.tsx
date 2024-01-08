@@ -1,36 +1,4 @@
-import { useEffect } from 'react';
-
-import { getPromociones, getSucursales, getAnnios, getCategorias, getMarcas, getModelos } from '../services/getData';
-
 const Fichas = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const promocionesData = await getPromociones();
-        console.log('Promociones:', promocionesData);
-
-        const sucursalesData = await getSucursales();
-        console.log('Sucursales:', sucursalesData);
-
-        const anniosData = await getAnnios();
-        console.log('Años:', anniosData);
-
-        const categoriasData = await getCategorias();
-        console.log('Categorias:', categoriasData);
-
-        const marcasData = await getMarcas();
-        console.log('Marcas:', marcasData);   
-        
-        const modelosData = await getModelos();
-        console.log('Modelos:', modelosData)
-
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <div>

@@ -129,3 +129,8 @@ export const getPreciominmax = async () => {
   return fetchData(url);
 };
 
+export const getDetalle = async () => {
+  const url = `/auto/${id}/detalle`;
+  return fetchData(url);
+};
+
