@@ -13,6 +13,64 @@ const api = axios.create({
   },
 });
 
+export const getInfo = async () => {
+  let data = {};
+
+  try {
+    const [
+      categorias,
+      marcas,
+      modelos,
+      promociones,
+      anniosDesde,
+      precios,
+      kms,
+      transmision,
+      sucursales,
+      combustible,
+      anniosMinMax,
+      preciosMinMax,
+    ] = await Promise.all([
+      getCategorias(),
+      getMarcas(),
+      getMarcas().then(marcas => (marcas && marcas.length) ? getModelos(marcas) : []),
+      getPromociones(),
+      getAnnios(),
+      getPrecios(),
+      getKms(),
+      getTransmision(),
+      getSucursales(),
+      getCombustibles(),
+      getAnniominmax(),
+      getPreciominmax(),
+    ]);
+
+    const anniosHasta = [...anniosDesde].reverse();
+
+    data = {
+      categorias,
+      marcas,
+      modelos,
+      promociones,
+      annioDesde: anniosDesde,
+      annioHasta: anniosHasta,
+      precios,
+      kms,
+      transmision,
+      sucursales,
+      combustible,
+      anniosMinMax,
+      preciosMinMax,
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+
+  return data;
+};
+
+
 export const fetchData = async (url, params = {}) => {
   try {
     const response = await api.get(url, { params });
@@ -130,7 +188,24 @@ export const getPreciominmax = async () => {
 };
 
 export const getDetalle = async () => {
-  const url = `/auto/${id}/detalle`;
+  const url = `/auto/1141402/detalle`;
   return fetchData(url);
 };
+
+
+// export const getAutos = async (params = {}) => {
+//   try {
+//     const url = '/autos';
+
+//     console.log('Data enviada a la API:', params);
+//     // Realiza la solicitud POST con axios
+//     const response = await api.post(url, params);
+
+//     // Devuelve los datos de la respuesta
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching autos:', error);
+//     throw error;
+//   }
+// };
 

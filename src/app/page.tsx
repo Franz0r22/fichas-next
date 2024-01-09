@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react';
-import { getPromociones, getSucursales, getAnnios, getCategorias, getMarcas, getModelos, getPrecios, getKms, getTransmision, getCombustibles, getAnniominmax, getPreciominmax } from './services/getData';
+import { getInfo } from './services/getData';
 import Fichas from './components/fichas';
 
 export default function Home() {
@@ -9,34 +9,12 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [promocionesData, sucursalesData, anniosData, categoriasData, marcasData, modelosData, preciosData, kmsData, transmisionData, combustiblesData, anniominmaxData, preciominmaxData] = await Promise.all([
-          getPromociones(),
-          getSucursales(),
-          getAnnios(),
-          getCategorias(),
-          getMarcas(),
-          getModelos(),
-          getPrecios(),
-          getKms(),
-          getTransmision(),
-          getCombustibles(),
-          getAnniominmax(),
-          getPreciominmax(),
+        const [getInfoData] = await Promise.all([
+          getInfo(),
         ]);
-  
-        console.log('Promociones:', promocionesData);
-        console.log('Sucursales:', sucursalesData);
-        console.log('Años:', anniosData);
-        console.log('Categorias:', categoriasData);
-        console.log('Marcas:', marcasData);
-        console.log('Modelos:', modelosData);
-        console.log('Precios:', preciosData);
-        console.log('Kms:', kmsData);
-        console.log('Transmision:', transmisionData);
-        console.log('Combustible:', combustiblesData);
-        console.log('Año Min y Max:', anniominmaxData);
-        console.log('Precio Min y Max:', preciominmaxData);
 
+        //console.log('Sucursales:', sucursalesData);
+        console.log('Data:', getInfoData);
 
       } catch (error) {
         console.error('Error al obtener datos:', error);
