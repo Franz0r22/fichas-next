@@ -9,9 +9,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [getInfoData] = await Promise.all([
-          getInfo(),
-        ]);
+        const getInfoData = await getInfo();
 
         //console.log('Sucursales:', sucursalesData);
         console.log('Data:', getInfoData);
@@ -29,10 +27,9 @@ export default function Home() {
     <div className="mx-auto max-w-screen-xl p-4">
       <main className="grid grid-cols-12 gap-4">
         <section className="col-span-4">
-          hola1
+          Filtros
         </section>
         <section className="col-span-8">
-          hola2
         <Fichas />
         </section>
       </main>

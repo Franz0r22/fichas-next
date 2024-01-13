@@ -1,9 +1,10 @@
-import axios from 'axios';
-// import { apiUrl, bearerToken, clienteId } from './config.service';
+import axios from "axios";
+import { NextResponse } from "next/server";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_FICHAS_URL;
-const bearerToken = process.env.NEXT_PUBLIC_API_FICHAS_TOKEN;
 const clienteId = process.env.NEXT_PUBLIC_CLIENTE_ID;
+const apiUrl = process.env.API_FICHAS_URL;
+const bearerToken = process.env.API_FICHAS_TOKEN;
+
 
 const api = axios.create({
   baseURL: apiUrl,
@@ -13,8 +14,8 @@ const api = axios.create({
   },
 });
 
-export const getInfo = async () => {
-  let data = {};
+export async function GET() {
+  let data: Record<string, any> = {};
 
   try {
     const [
@@ -62,16 +63,16 @@ export const getInfo = async () => {
       anniosMinMax,
       preciosMinMax,
     };
+    
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;
   }
 
-  return data;
-};
+  return NextResponse.json({ data }, { status: 201 });
+}
 
-
-export const fetchData = async (url, params = {}) => {
+export const fetchData = async (url: string, params: any = {}): Promise<any> => {
   try {
     const response = await api.get(url, { params });
     return response.data;
@@ -81,49 +82,17 @@ export const fetchData = async (url, params = {}) => {
   }
 };
 
-export const getCategorias = async () => {
+export const getCategorias = async (): Promise<any[]> => {
   const url = `/diccionario/clientes/${clienteId}/categorias`;
   return fetchData(url);
 };
 
-export const getMarcas = async () => {
+export const getMarcas = async (): Promise<any[]> => {
   const url = `/diccionario/marcas/clientes/${clienteId}/categorias`;
   return fetchData(url);
 };
 
-// export const getModelosAjax = async (request) => {
-//   const marcaArr = Array.isArray(request.marca) ? request.marca.join(',') : request.marca;
-//   const categoriaArr = Array.isArray(request.categoria) ? request.categoria.join(',') : request.categoria;
-
-//   let categoriaArrFormatted = categoriaArr ? categoriaArr.replace(' / Station Wagon', '') : 'Automóviles,Camionetas,Suv,Furgones';
-
-//   let url = `/diccionario/clientes/${clienteId}/categorias/${categoriaArrFormatted}/marcas/${marcaArr}/modelos`;
-
-//   if (url.includes(' ')) {
-//     url = url.replace(/ /g, '%20');
-//   }
-
-//   if (marcaArr) {
-//     return fetchData(url);
-//   }
-
-//   return [];
-// };
-
-// export const getMarcasAjax = async (request) => {
-//   const categoriaArr = Array.isArray(request.categoria) ? request.categoria.join(',') : request.categoria;
-//   let categoriaArrFormatted = categoriaArr ? categoriaArr.replace(' / Station Wagon', '') : 'Automóviles,Camionetas,Suv,Furgones';
-
-//   let url = `/diccionario/clientes/${clienteId}/categorias/${categoriaArrFormatted}/marcas`;
-
-//   if (url.includes(' ')) {
-//     url = url.replace(/ /g, '%20');
-//   }
-
-//   return fetchData(url);
-// };
-
-export const getModelos = async (marca) => {
+export const getModelos = async (marca: any): Promise<any[]> => {
   const marcaArr = Array.isArray(marca) ? marca.join(',') : marca;
 
   let url = `/diccionario/clientes/${clienteId}/marca/${marcaArr}/modelos`;
@@ -135,12 +104,12 @@ export const getModelos = async (marca) => {
   return fetchData(url);
 };
 
-export const getPromociones = async () => {
+export const getPromociones = async (): Promise<any[]> => {
   const url = `/get/etiquetas/${clienteId}`;
   return fetchData(url);
 };
 
-export const getSucursales = async (unssetLast = true) => {
+export const getSucursales = async (unssetLast = true): Promise<any[]> => {
   const url = `/diccionario/autos/sucursales/${clienteId}`;
   
   const sucursales = await fetchData(url);
@@ -152,60 +121,42 @@ export const getSucursales = async (unssetLast = true) => {
   return sucursales;
 };
 
-export const getAnnios = async () => {
+export const getAnnios = async (): Promise<any[]> => {
   const url = `/diccionario/autos/annios/${clienteId}`;
   return fetchData(url);
 };
 
-export const getPrecios = async () => {
+export const getPrecios = async (): Promise<any[]> => {
   const url = `/diccionario/autos/precios`;
   return fetchData(url);
 };
 
-export const getKms = async () => {
+export const getKms = async (): Promise<any[]> => {
   const url = `/diccionario/autos/kms`;
   return fetchData(url);
 };
 
-export const getTransmision = async () => {
+export const getTransmision = async (): Promise<any[]> => {
   const url = `/diccionario/autos/transmision`;
   return fetchData(url);
 };
 
-export const getCombustibles = async () => {
+export const getCombustibles = async (): Promise<any[]> => {
   const url = `/diccionario/autos/combustibles/${clienteId}`;
   return fetchData(url);
 };
 
-export const getAnniominmax = async () => {
+export const getAnniominmax = async (): Promise<any[]> => {
   const url = `/diccionario/autos/anniominmax/${clienteId}`;
   return fetchData(url);
 };
 
-export const getPreciominmax = async () => {
+export const getPreciominmax = async (): Promise<any[]> => {
   const url = `/diccionario/autos/preciosminmax/${clienteId}`;
   return fetchData(url);
 };
 
-export const getDetalle = async () => {
+export const getDetalle = async (): Promise<any[]> => {
   const url = `/auto/1141402/detalle`;
   return fetchData(url);
 };
-
-
-// export const getAutos = async (params = {}) => {
-//   try {
-//     const url = '/autos';
-
-//     console.log('Data enviada a la API:', params);
-//     // Realiza la solicitud POST con axios
-//     const response = await api.post(url, params);
-
-//     // Devuelve los datos de la respuesta
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching autos:', error);
-//     throw error;
-//   }
-// };
-
