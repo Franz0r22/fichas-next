@@ -5,7 +5,6 @@ const clienteId = process.env.NEXT_PUBLIC_CLIENTE_ID;
 const apiUrl = process.env.API_FICHAS_URL;
 const bearerToken = process.env.API_FICHAS_TOKEN;
 
-
 const api = axios.create({
   baseURL: apiUrl,
   headers: {
@@ -14,62 +13,101 @@ const api = axios.create({
   },
 });
 
-export async function GET() {
-  let data: Record<string, any> = {};
-
-  try {
-    const [
-      categorias,
-      marcas,
-      modelos,
-      promociones,
-      anniosDesde,
-      precios,
-      kms,
-      transmision,
-      sucursales,
-      combustible,
-      anniosMinMax,
-      preciosMinMax,
-    ] = await Promise.all([
-      getCategorias(),
-      getMarcas(),
-      getMarcas().then(marcas => (marcas && marcas.length) ? getModelos(marcas) : []),
-      getPromociones(),
-      getAnnios(),
-      getPrecios(),
-      getKms(),
-      getTransmision(),
-      getSucursales(),
-      getCombustibles(),
-      getAnniominmax(),
-      getPreciominmax(),
-    ]);
-
-    const anniosHasta = [...anniosDesde].reverse();
-
-    data = {
-      categorias,
-      marcas,
-      modelos,
-      promociones,
-      annioDesde: anniosDesde,
-      annioHasta: anniosHasta,
-      precios,
-      kms,
-      transmision,
-      sucursales,
-      combustible,
-      anniosMinMax,
-      preciosMinMax,
-    };
-    
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
+export async function GET(request: Request) {
+  // Verifica si la solicitud es un método OPTIONS (preflight)
+  if (request.method === 'OPTIONS') {
+    // Responde con los encabezados CORS necesarios para las solicitudes preflight
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   }
 
-  return NextResponse.json({ data }, { status: 201 });
+  // Verifica si la solicitud es un método GET
+  if (request.method === 'GET') {
+    // Tu lógica de manejo de solicitud GET aquí
+    let data: Record<string, any> = {};
+
+    try {
+      const [
+        categorias,
+        marcas,
+        modelos,
+        promociones,
+        anniosDesde,
+        precios,
+        kms,
+        transmision,
+        sucursales,
+        combustible,
+        anniosMinMax,
+        preciosMinMax,
+      ] = await Promise.all([
+        getCategorias(),
+        getMarcas(),
+        getMarcas().then(marcas => (marcas && marcas.length) ? getModelos(marcas) : []),
+        getPromociones(),
+        getAnnios(),
+        getPrecios(),
+        getKms(),
+        getTransmision(),
+        getSucursales(),
+        getCombustibles(),
+        getAnniominmax(),
+        getPreciominmax(),
+      ]);
+
+      const anniosHasta = [...anniosDesde].reverse();
+
+      data = {
+        categorias,
+        marcas,
+        modelos,
+        promociones,
+        annioDesde: anniosDesde,
+        annioHasta: anniosHasta,
+        precios,
+        kms,
+        transmision,
+        sucursales,
+        combustible,
+        anniosMinMax,
+        preciosMinMax,
+      };
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+
+    // Obtén el origen de la solicitud (origen del cliente)
+    const clientOrigin = request.headers.get('Origin');
+    console.log(clientOrigin);
+    // Verifica si el origen es tu dominio o localhost (en desarrollo)
+    const allowedOrigins = ['https://tudominio.com']; // Agrega tus dominios permitidos aquí
+
+    if (clientOrigin == null || clientOrigin && allowedOrigins.includes(clientOrigin)) {
+      // El origen es permitido, responde con los encabezados CORS específicos
+      return NextResponse.json({ data }, {
+        status: 201,
+        headers: {
+          'Access-Control-Allow-Origin': clientOrigin ? clientOrigin : '',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    } else {
+      // El origen no está permitido, responde con un error o manejo adecuado
+      return new Response('Forbidden', { status: 403 });
+    }
+  }
+
+  // Si la solicitud no es GET ni OPTIONS, responde con un error
+  return new Response('Method Not Allowed', { status: 405 });
 }
 
 export const fetchData = async (url: string, params: any = {}): Promise<any> => {
