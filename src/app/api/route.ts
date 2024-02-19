@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       status: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
     });
@@ -84,10 +84,8 @@ export async function GET(request: Request) {
       throw error;
     }
 
-    // Obtén el origen de la solicitud (origen del cliente)
     const clientOrigin = request.headers.get('Origin');
     console.log(clientOrigin);
-    // Verifica si el origen es tu dominio o localhost (en desarrollo)
     const allowedOrigins = ['https://tudominio.com']; // Agrega tus dominios permitidos aquí
 
     if (clientOrigin == null || clientOrigin && allowedOrigins.includes(clientOrigin)) {
