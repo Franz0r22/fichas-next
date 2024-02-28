@@ -25,6 +25,78 @@ interface Transmision {
   tipo: string;
 }
 
+interface Car {
+  MARCA: string;
+  MODELO: string;
+  MARCAID: number;
+  MODELOID: number;
+  AUTODES: string;
+  CATMARMODID: number;
+  TABLA: number;
+  AUTOID: number;
+  PRODUCTOID: number;
+  CATEGORIAID: number;
+  INTANO: number;
+  VCHCOLOR: string;
+  VCHVERSION: string;
+  VCHDESCRIPCION: string;
+  VCHPRECIO: number;
+  CLIENTEID: number;
+  VCHCODIGO: string;
+  VCHMONEDA: string;
+  VCHKILOMETROS: string;
+  INTCILINDRADA: number;
+  VCHTELEFONO1: string;
+  VCHTELEFONO2: string | null;
+  VCHEMAIL1: string;
+  TIPOPUB: number;
+  TIPOCONT: string;
+  VCHNOMBRE: string;
+  VCHAPELLIDOS: string;
+  VCHORIGEN: string | null;
+  BITVIDEO: null;
+  VCHPATENTE: string;
+  INTTIPO: number;
+  CONTACTOID: number;
+  INTESTADO: number;
+  INTCONDICION: number;
+  FECINIPUBLICA: string;
+  VCHFOTO: string;
+  ETIQUETA: string;
+  VCHCOMBUSTIBLE: string;
+  VCHTRANSMISION: string;
+  VCHVIDEO: string | null;
+  VCHACTIVADOR: string;
+  VCHACTIVAFINANCIAMIENTO: string;
+  VCHETIQUETA_TITULO: string;
+  VCHETIQUETA_COLOR: string;
+  VCHPIEMINIMO: string | null;
+  VCHCAE: string | null;
+  VCHNUMCUOTA: string | null;
+  VCHCUOTA: string | null;
+  VCHVFMG: string | null;
+  CLIENTE: string;
+  NOMFOTO: string;
+  VCHCTC: string | null;
+  VCHLEGALPRECIO: string;
+  VCHLEGALPRECIO2: string;
+  VCHLEGALPRECIO3: string;
+  VCH360: string | null;
+  INTPORCALIDADCALPUB: number;
+  url_foto_particular: string;
+  CARROCERIAID: string;
+  PESOOPERACIONAL: number;
+  CAPACIDADCARGA: string | null;
+  ALTURAELEVACION: string | null;
+  VCHNUMSERIAL: string | null;
+  VCHFAX: string;
+  fontcolor: string;
+  PLANID: number;
+  APITOKEN: number | null;
+  TOKEN: string | null;
+  RowNumber: string;
+}
+
 export default function Home() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [marcas, setMarcas] = useState<Marca[]>([]);
@@ -33,6 +105,8 @@ export default function Home() {
 
   const [showAllModelos, setShowAllModelos] = useState(false);
   const [showAllMarcas, setShowAllMarcas] = useState(false);
+
+  const [cars, setCars] = useState<Car[]>([]);
 
   const toggleShowAllModelos = () => {
     setShowAllModelos(!showAllModelos);
@@ -54,6 +128,7 @@ export default function Home() {
         setMarcas(data.marcas);
         setModelos(data.modelos);
         setTransmision(data.transmision.map(([id, tipo]: [number, string]) => ({ id, tipo })));
+        setCars(data.cars);
 
         console.log(data);
 
@@ -142,9 +217,23 @@ export default function Home() {
         </section>
       </main>
       <main className="col-span-8">
-        <p className="text-6xl text-center md:text-9xl font-extrabold bg-clip-text text-transparent bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400),theme(colors.sky.400),theme(colors.indigo.100),theme(colors.indigo.400))] bg-[length:200%_auto] animate-gradient">
-          STOCKS
-        </p>
+        <h2>Vehículos disponibles:</h2>
+        {cars.length > 0 ? (
+        <ul>
+          {cars.map((car) => (
+            <li key={car.AUTOID}>
+              <img src={car.url_foto_particular} alt={car.MARCA} width="300"/>
+              <p>Marca: {car.MARCA}</p>
+              <p>Modelo: {car.MODELO}</p>
+              <p>Año: {car.INTANO}</p>
+              <p>Precio: {car.VCHPRECIO} {car.VCHMONEDA}</p>
+              <p>Kilometraje: {car.VCHKILOMETROS} km</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No hay vehículos disponibles en este momento.</p>
+      )}
       </main>
     </div>
   );

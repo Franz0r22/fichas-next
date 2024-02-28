@@ -13,6 +13,14 @@ const api = axios.create({
   },
 });
 
+const apiDTK2 = axios.create({
+  baseURL: process.env.API_DTK2_URL,
+  headers: {
+    Authorization: `Bearer ${process.env.API_DTK2_TOKEN}`,
+    'Content-Type': 'application/json',
+  },
+});
+
 export async function GET(request: Request) {
   // Verifica si la solicitud es un método OPTIONS (preflight)
   if (request.method === 'OPTIONS') {
@@ -33,6 +41,9 @@ export async function GET(request: Request) {
     let data: Record<string, any> = {};
 
     try {
+      const clienteId: any = process.env.NEXT_PUBLIC_CLIENTE_ID;
+      const pageNumber: number = 1;
+      const pageSize: number = 10;
       const [
         categorias,
         marcas,
@@ -46,6 +57,7 @@ export async function GET(request: Request) {
         combustible,
         anniosMinMax,
         preciosMinMax,
+        cars
       ] = await Promise.all([
         getCategorias(),
         getMarcas(),
@@ -59,6 +71,7 @@ export async function GET(request: Request) {
         getCombustibles(),
         getAnniominmax(),
         getPreciominmax(),
+        getCars(clienteId, pageNumber, pageSize)
       ]);
 
       const anniosHasta = [...anniosDesde].reverse();
@@ -77,6 +90,7 @@ export async function GET(request: Request) {
         combustible,
         anniosMinMax,
         preciosMinMax,
+        cars,
       };
       
     } catch (error) {
@@ -107,6 +121,27 @@ export async function GET(request: Request) {
   // Si la solicitud no es GET ni OPTIONS, responde con un error
   return new Response('Method Not Allowed', { status: 405 });
 }
+
+export const getCars = async (clienteId: number, pageNumber: number, pageSize: number): Promise<any[]> => {
+  const url = '/carDealers/stock';
+  const params = {
+    CLIENTEID: clienteId,
+    TABLA: 1,
+    PageNumber: pageNumber,
+    PageSize: pageSize
+  };
+  return fetchDataDTK2(url, params);
+};
+
+export const fetchDataDTK2 = async (url: string, params: any = {}): Promise<any> => {
+  try {
+    const response = await apiDTK2.get(url, { params });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data from DTK2 API:', error);
+    throw error;
+  }
+};
 
 export const fetchData = async (url: string, params: any = {}): Promise<any> => {
   try {
