@@ -13,10 +13,21 @@ const api = axios.create({
   },
 });
 
+const apiDTK2 = axios.create({
+  baseURL: process.env.API_DTK2_URL,
+  headers: {
+    Authorization: `Bearer ${process.env.API_DTK2_TOKEN}`,
+    'Content-Type': 'application/json',
+  },
+});
+
 export const getInfo = async (): Promise<Record<string, any>> => {
   let data: Record<string, any> = {};
 
   try {
+    const clienteId: any = process.env.NEXT_PUBLIC_CLIENTE_ID;
+    const pageNumber: number = 1;
+    const pageSize: number = 10;
     const [
       categorias,
       marcas,
@@ -43,6 +54,7 @@ export const getInfo = async (): Promise<Record<string, any>> => {
       getCombustibles(),
       getAnniominmax(),
       getPreciominmax(),
+      getCars(clienteId, pageNumber, pageSize)
     ]);
 
     const anniosHasta = [...anniosDesde].reverse();
@@ -81,6 +93,27 @@ export const fetchData = async (url: string, params: any = {}): Promise<any> => 
     console.error('Error fetching data:', error);
     throw error;
   }
+};
+
+export const fetchDataDTK2 = async (url: string, params: any = {}): Promise<any> => {
+  try {
+    const response = await apiDTK2.get(url, { params });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data from DTK2 API:', error);
+    throw error;
+  }
+};
+
+export const getCars = async (clienteId: number, pageNumber: number, pageSize: number): Promise<any[]> => {
+  const url = '/carDealers/stock';
+  const params = {
+    CLIENTEID: clienteId,
+    TABLA: 1,
+    PageNumber: pageNumber,
+    PageSize: pageSize
+  };
+  return fetchDataDTK2(url, params);
 };
 
 export const getCategorias = async (): Promise<any[]> => {
