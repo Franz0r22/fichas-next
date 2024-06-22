@@ -21,13 +21,28 @@ const apiDTK2 = axios.create({
   },
 });
 
+export const getPaginatedCars = async () => {
+  let cars;
+
+  try {
+    const clientId: any = process.env.NEXT_PUBLIC_CLIENTE_ID;
+    const pageNumber: number = 1;
+    const pageSize: number = 10;
+
+    cars = await getCars(clientId, pageNumber, pageSize); // Corrige la asignación de la variable cars
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+  return cars;
+};
+
 export const getInfo = async (): Promise<Record<string, any>> => {
   let data: Record<string, any> = {};
 
   try {
-    const clienteId: any = process.env.NEXT_PUBLIC_CLIENTE_ID;
-    const pageNumber: number = 1;
-    const pageSize: number = 10;
+
     const [
       categorias,
       marcas,
@@ -41,6 +56,7 @@ export const getInfo = async (): Promise<Record<string, any>> => {
       combustible,
       anniosMinMax,
       preciosMinMax,
+
     ] = await Promise.all([
       getCategorias(),
       getMarcas(),
@@ -54,7 +70,7 @@ export const getInfo = async (): Promise<Record<string, any>> => {
       getCombustibles(),
       getAnniominmax(),
       getPreciominmax(),
-      getCars(clienteId, pageNumber, pageSize)
+
     ]);
 
     const anniosHasta = [...anniosDesde].reverse();
@@ -79,8 +95,6 @@ export const getInfo = async (): Promise<Record<string, any>> => {
     console.error('Error fetching data:', error);
     throw error;
   }
-
-  console.log(data)
   return data;
 };
 

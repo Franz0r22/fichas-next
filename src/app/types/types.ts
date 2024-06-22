@@ -1,9 +1,61 @@
-'use client';
+export interface Categoria {
+  id: string;
+  nombre: string;
+  nombreIngles?: string;
+}
 
-import { useState, useEffect } from 'react';
+export interface Marca {
+  id: string;
+  nombre: string;
+}
 
-interface Car {
-    cars: any;
+export interface Modelo {
+  MODELOID: string;
+  MODELO: string;
+}
+
+export interface Promocion {
+  VCHETIQUETA: string;
+  VCHETIQUETA_COLOR: string;
+  VCHETIQUETA_TITULO: string;
+  VCHETIQUETA_BACKGROUND_COLOR: string;
+  VCHETIQUETA_FONT_COLOR: string;
+}
+
+export interface Anio {
+  INTANO: string;
+}
+
+export interface Precio {
+  min: number;
+  max: number | null;
+}
+
+export interface Km {
+  min: number;
+  max: number | null;
+}
+
+export interface Transmision {
+  id: number;
+  tipo: string;
+}
+
+export interface Sucursal {
+  nombre: string;
+}
+
+export interface Combustible {
+  id: string;
+  combustible_nombre: string;
+  combustible_nombre_ing: string;
+}
+
+
+
+
+export interface Car {
+    cars?: any;
     MARCA?: string;
     MODELO?: string;
     MARCAID?: number;
@@ -11,18 +63,18 @@ interface Car {
     // AUTODES: string;
     // CATMARMODID: number;
     // TABLA: number;
-    // AUTOID: number;
+    AUTOID: number;
     // PRODUCTOID: number;
     // CATEGORIAID: number;
-    // INTANO: number;
+    INTANO: number;
     // VCHCOLOR: string;
     // VCHVERSION: string;
     // VCHDESCRIPCION: string;
-    // VCHPRECIO: number;
+    VCHPRECIO: number;
     // CLIENTEID: number;
     // VCHCODIGO: string;
-    // VCHMONEDA: string;
-    // VCHKILOMETROS: string;
+    VCHMONEDA: string;
+    VCHKILOMETROS: string;
     // INTCILINDRADA: number;
     // VCHTELEFONO1: string;
     // VCHTELEFONO2: string | null;
@@ -61,7 +113,7 @@ interface Car {
     // VCHLEGALPRECIO3: string;
     // VCH360: string | null;
     // INTPORCALIDADCALPUB: number;
-    // url_foto_particular: string;
+    url_foto_particular: string;
     // CARROCERIAID: string;
     // PESOOPERACIONAL: number;
     // CAPACIDADCARGA: string | null;
@@ -74,31 +126,3 @@ interface Car {
     // TOKEN: string | null;
     // RowNumber: string;
   }
-  
-  const Car: React.FC<Car> = ({ cars }) => {
-    
-  
-    return (
-      <div>
-        {cars.length > 0 ? (
-        <ul>
-          {cars.map((car) => (
-            <li key={car.AUTOID}>
-              <img src={car.url_foto_particular} alt={car.MARCA} width="300"/>
-              <p>Marca: {car.MARCA}</p>
-              <p>Modelo: {car.MODELO}</p>
-              <p>Año: {car.INTANO}</p>
-              <p>Precio: {car.VCHPRECIO} {car.VCHMONEDA}</p>
-              <p>Kilometraje: {car.VCHKILOMETROS} km</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No hay vehículos disponibles en este momento.</p>
-      )}
-      </div>
-    );
-  };
-  
-  export default Car;
-  

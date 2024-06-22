@@ -26,7 +26,6 @@ const Navbar = () => {
     <nav>
       <div className="container flex justify-between items-center max-w-screen-xl mx-auto h-20 px-4 text-black nav">
         <div>
-          {/* <h1 className="text-5xl font-signature ml-2"><a className="link-underline hover:transition ease-in-out delay-150 hover:underline hover:decoration-solid" href="">Logo</a></h1> */}
           <h1 className="text-5xl font-signature ml-2">
             <a
               className="link-underline link-underline-black"
